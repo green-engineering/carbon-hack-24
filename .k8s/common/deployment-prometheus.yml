@@ -1,0 +1,56 @@
+# prometheus
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: carbon-hack-24-prometheus
+  namespace: carbon-hack-24
+spec:
+  selector:
+    matchLabels:
+      app: carbon-hack-24-prometheus
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: carbon-hack-24-prometheus
+    spec:
+      containers:
+        - name: prometheus
+          image: 'nsnprodsacr001.azurecr.io/prom/prometheus:v2.50.1'
+          command: 
+          - "/bin/prometheus"
+          - "--config.file=/etc/prometheus/prometheus.yml"
+          - "--storage.tsdb.path=/prometheus"
+          - "--storage.tsdb.retention.time=30d"
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 9090
+              name: http-prometheus
+              protocol: TCP
+          resources:
+            requests:
+              cpu: 500m
+              memory: 128Mi
+            limits:
+              cpu: 1000m
+              memory: 256Mi
+          volumeMounts:
+          - mountPath: /prometheus
+            name: data
+          - mountPath: /etc/prometheus/prometheus.yml
+            subPath: prometheus.yml
+            name: prometheus-yml
+
+      volumes:
+        - name: data
+          emptyDir:
+            sizeLimit: 16Gi
+        - name: prometheus-yml
+          configMap:
+            name: prometheus-yml
+
+      tolerations:
+      - key: "kubernetes.azure.com/scalesetpriority"
+        operator: "Equal"
+        value: "spot"
+        effect: "NoSchedule"

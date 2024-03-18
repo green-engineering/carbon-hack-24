@@ -1,0 +1,94 @@
+# app
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: carbon-hack-24-app
+  namespace: carbon-hack-24
+spec:
+  selector:
+    matchLabels:
+      app: carbon-hack-24-app
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: carbon-hack-24-app
+    spec:
+      containers:
+        - name: carbon-hack-24-app
+          env:
+            - name: DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: pgsql-greenops
+                  key: user
+            - name: DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: pgsql-greenops
+                  key: db-name
+            - name: DB_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: pgsql-greenops
+                  key: db-host
+            - name: DB_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: pgsql-greenops
+                  key: db-port
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: pgsql-greenops
+                  key: password
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: app-admin
+                  key: jwt-secret
+            - name: ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: app-admin
+                  key: password
+            - name: ADMIN_USER
+              valueFrom:
+                secretKeyRef:
+                  name: app-admin
+                  key: user
+
+            - name: no_proxy
+              value: '''
+            - name: https_proxy
+              value: 
+            - name: http_proxy
+              value: 
+              
+          image: 'nsnprodsacr001.azurecr.io/greenops/carbon-hack-24-app:dev'
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 4000
+              name: http-app
+              protocol: TCP
+          resources:
+            requests:
+             memory: "1Gi"
+             cpu: "500m"
+            limits:
+             memory: "2Gi"
+             cpu: "1"
+          volumeMounts:
+          - mountPath: /app/uploads
+            name: data
+
+      volumes:
+        - name: data
+          emptyDir:
+            sizeLimit: 2Gi
+
+      tolerations:
+      - key: "kubernetes.azure.com/scalesetpriority"
+        operator: "Equal"
+        value: "spot"
+        effect: "NoSchedule"
