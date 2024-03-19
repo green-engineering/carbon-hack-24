@@ -1,0 +1,45 @@
+services:
+  prometheus:
+    image: "prom/prometheus:latest"
+    container_name: nb-green-ops-prometheus
+    restart: unless-stopped
+    ports:
+    - "9090:9090"
+    networks:
+    - nb-green-ops-net
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--storage.tsdb.retention.time=30d'
+    volumes:
+    - ${PWD}/.config/prometheus/docker-compose-prometheus.yml:/etc/prometheus/prometheus.yml
+    - nb-green-ops-prometheus-storage:/prometheus
+
+  grafana:
+    image: "grafana/grafana:latest"
+    container_name: nb-green-ops-grafana
+    restart: unless-stopped
+    ports:
+    - "3000:3000"
+    environment:
+    - GF_INSTALL_PLUGINS=
+    - GF_PATHS_PROVISIONING=/etc/grafana/provisioning
+    - GRAFANA_ADMIN_PASSWORD=admin
+    - GRAFANA_DOMAIN=localhost:3000
+    - GRAFANA_DB_HOST=nb-green-ops-postgres:5432
+    - GRAFANA_DB_NAME=greenops_grafana
+    - GRAFANA_DB_USER=postgres
+    - GRAFANA_DB_PASSWORD=mysecretpassword
+    networks:
+    - nb-green-ops-net
+    volumes:
+    - nb-green-ops-grafana-storage:/var/lib/grafana
+    - ${PWD}/.config/grafana/provisioning/datasources/docker-compose-provisioning.yaml:/etc/grafana/provisioning/datasources/provisioning.yaml
+    - ${PWD}/.config/grafana/grafana.ini:/etc/grafana/grafana.ini
+
+
+volumes:
+  nb-green-ops-grafana-storage: {}
+  nb-green-ops-prometheus-storage: {}
+networks:
+  nb-green-ops-net:

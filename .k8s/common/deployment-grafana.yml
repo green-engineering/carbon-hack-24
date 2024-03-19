@@ -1,0 +1,119 @@
+
+#grafana
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nb-green-ops-grafana
+  namespace: nb-green-ops
+spec:
+  selector:
+    matchLabels:
+      app: nb-green-ops-grafana
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: nb-green-ops-grafana
+    spec:
+      containers:
+        - name: grafana
+          env:
+            - name: GRAFANA_DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: pgsql-greenops-grafana
+                  key: user
+            - name: GRAFANA_DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: pgsql-greenops-grafana
+                  key: db-name
+            - name: GRAFANA_DB_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: pgsql-greenops-grafana
+                  key: db-host
+            - name: DB_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: pgsql-greenops-grafana
+                  key: db-port
+            - name: GRAFANA_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: pgsql-greenops-grafana
+                  key: password
+
+            - name: GRAFANA_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: grafana-admin
+                  key: password
+
+            - name: GRAFANA_DOMAIN
+              value: 'localhost'
+            
+            - name: no_proxy
+              value: ''
+            - name: https_proxy
+              value: ''
+            - name: http_proxy
+              value: ''
+
+          image: 'localhost/grafana/grafana:10.3.1'
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 3000
+              name: http-grafana
+              protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /robots.txt
+              port: 3000
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 30
+            successThreshold: 1
+            timeoutSeconds: 2
+          livenessProbe:
+            failureThreshold: 3
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            successThreshold: 1
+            tcpSocket:
+              port: 3000
+            timeoutSeconds: 1
+          resources:
+            requests:
+              cpu: 250m
+              memory: 750Mi
+            limits:
+              cpu: 450m
+              memory: 1000Mi
+          volumeMounts:
+            - mountPath: /var/lib/grafana
+              name: grafana-pv
+            - mountPath: /etc/grafana/grafana.ini
+              subPath: grafana.ini
+              name: grafana-ini
+            - mountPath: /etc/grafana/ldap.toml
+              subPath: ldap.toml
+              name: ldap-toml
+              readOnly: true
+
+      volumes:
+        - name: grafana-pv
+          persistentVolumeClaim:
+            claimName: nb-green-ops-grafana-pvc
+        - name: grafana-ini
+          secret:
+            secretName: grafana-ini
+        - name: ldap-toml
+          secret:
+            secretName: ldap-toml
+      tolerations:
+      - key: "kubernetes.io/scalesetpriority"
+        operator: "Equal"
+        value: "spot"
+        effect: "NoSchedule"

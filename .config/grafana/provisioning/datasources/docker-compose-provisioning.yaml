@@ -1,0 +1,13 @@
+# https://grafana.com/docs/grafana/latest/datasources/postgres/
+apiVersion: 1
+
+deleteDatasources:
+  - name: Prometheus
+    orgId: 1
+
+datasources:
+  - name: Prometheus
+    type: prometheus
+    orgId: 1
+    uid: greenopsprometheus
+    url: http://nb-green-ops-prometheus:9090

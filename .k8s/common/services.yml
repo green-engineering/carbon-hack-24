@@ -1,0 +1,34 @@
+#grafana
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    name: nb-green-ops-grafana
+  name: nb-green-ops-grafana
+  namespace: nb-green-ops
+spec:
+  type: ClusterIP
+  ports:
+    - port: 443
+      targetPort: 3000
+      name: nb-green-ops-grafana
+  selector:
+    app: nb-green-ops-grafana
+---
+
+# prometheus
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    name: nb-green-ops-prometheus
+  name: nb-green-ops-prometheus
+  namespace: nb-green-ops
+spec:
+  type: ClusterIP
+  ports:
+    - port: 9090
+      targetPort: 9090
+      name: nb-green-ops-prometheus
+  selector:
+    app: nb-green-ops-prometheus

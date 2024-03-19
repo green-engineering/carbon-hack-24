@@ -1,0 +1,39 @@
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nb-green-ops-grafana-pv
+spec:
+  capacity:
+    storage: 25Gi
+  accessModes:
+    - ReadWriteMany
+  storageClassName: localhost-csi
+  azureFile:
+    secretName: nb-green-opsshare-secret
+    secretNamespace: nb-green-ops
+    shareName: nb-green-ops/grafana
+    readOnly: false
+  mountOptions:
+  - dir_mode=0777
+  - file_mode=0777
+  - uid=1000
+  - gid=1000
+  - mfsymlinks
+  - nobrl
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: nb-green-ops-grafana-pvc
+  namespace: nb-green-ops
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 25Gi
+  volumeName: nb-green-ops-grafana-pv
+  storageClassName: azurefile-csi
+  volumeMode: Filesystem
