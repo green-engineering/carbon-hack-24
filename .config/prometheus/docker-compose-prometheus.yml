@@ -16,12 +16,7 @@ scrape_configs:
   - job_name: 'grafana'
     metrics_path: /grafana/metrics
     static_configs:
-      - targets: ['nb-green-ops--grafana:3000']
-
-  # - job_name: 'nb-green-ops--app'
-  #   metrics_path: /metrics
-  #   static_configs:
-  #     - targets: ['nb-green-ops--app:4000']
+      - targets: ['localhost:3000']
 
 
 

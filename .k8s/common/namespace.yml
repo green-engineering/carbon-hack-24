@@ -1,8 +1,0 @@
-kind: Namespace
-apiVersion: v1
-metadata:
-  name: nb-green-ops
-  labels:
-    kubernetes.io/metadata.name: nb-green-ops
-  annotations:
-    scheduler.alpha.kubernetes.io/node-selector: nodepool=localhost

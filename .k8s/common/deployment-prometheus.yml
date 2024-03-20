@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: prometheus
-          image: 'localhost/prom/prometheus:v2.50.1'
+          image: 'localhost/prom/prometheus:latest'
           command: 
           - "/bin/prometheus"
           - "--config.file=/etc/prometheus/prometheus.yml"
@@ -49,8 +49,3 @@ spec:
           configMap:
             name: prometheus-yml
 
-      tolerations:
-      - key: "kubernetes.io/scalesetpriority"
-        operator: "Equal"
-        value: "spot"
-        effect: "NoSchedule"

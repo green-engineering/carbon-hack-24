@@ -32,3 +32,21 @@ spec:
       name: nb-green-ops-prometheus
   selector:
     app: nb-green-ops-prometheus
+
+---
+# app
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    name: if-metrics-app
+  name: if-metrics-app
+  namespace: nb-green-ops
+spec:
+  type: ClusterIP
+  ports:
+    - port: 4040
+      targetPort: 4040
+      name: if-metrics-app
+  selector:
+    app: if-metrics-app

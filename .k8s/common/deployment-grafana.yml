@@ -18,49 +18,10 @@ spec:
       containers:
         - name: grafana
           env:
-            - name: GRAFANA_DB_USER
-              valueFrom:
-                secretKeyRef:
-                  name: pgsql-greenops-grafana
-                  key: user
-            - name: GRAFANA_DB_NAME
-              valueFrom:
-                secretKeyRef:
-                  name: pgsql-greenops-grafana
-                  key: db-name
-            - name: GRAFANA_DB_HOST
-              valueFrom:
-                secretKeyRef:
-                  name: pgsql-greenops-grafana
-                  key: db-host
-            - name: DB_PORT
-              valueFrom:
-                secretKeyRef:
-                  name: pgsql-greenops-grafana
-                  key: db-port
-            - name: GRAFANA_DB_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: pgsql-greenops-grafana
-                  key: password
-
             - name: GRAFANA_ADMIN_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: grafana-admin
-                  key: password
+              value: admin
 
-            - name: GRAFANA_DOMAIN
-              value: 'localhost'
-            
-            - name: no_proxy
-              value: ''
-            - name: https_proxy
-              value: ''
-            - name: http_proxy
-              value: ''
-
-          image: 'localhost/grafana/grafana:10.3.1'
+          image: 'localhost/grafana/grafana:latest'
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 3000
@@ -97,23 +58,13 @@ spec:
             - mountPath: /etc/grafana/grafana.ini
               subPath: grafana.ini
               name: grafana-ini
-            - mountPath: /etc/grafana/ldap.toml
-              subPath: ldap.toml
-              name: ldap-toml
-              readOnly: true
 
       volumes:
         - name: grafana-pv
-          persistentVolumeClaim:
-            claimName: nb-green-ops-grafana-pvc
+          emptyDir:
+            sizeLimit: 16Gi
         - name: grafana-ini
           secret:
             secretName: grafana-ini
-        - name: ldap-toml
-          secret:
-            secretName: ldap-toml
-      tolerations:
-      - key: "kubernetes.io/scalesetpriority"
-        operator: "Equal"
-        value: "spot"
-        effect: "NoSchedule"
+
+

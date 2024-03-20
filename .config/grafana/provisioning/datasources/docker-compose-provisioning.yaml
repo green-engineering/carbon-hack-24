@@ -10,4 +10,4 @@ datasources:
     type: prometheus
     orgId: 1
     uid: greenopsprometheus
-    url: http://nb-green-ops-prometheus:9090
+    url: http://localhost:9090
