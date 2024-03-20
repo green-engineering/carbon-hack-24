@@ -1,20 +1,20 @@
 #grafana
-apiVersion: v1
-kind: Service
-metadata:
-  labels:
-    name: nb-green-ops-grafana
-  name: nb-green-ops-grafana
-  namespace: nb-green-ops
-spec:
-  type: ClusterIP
-  ports:
-    - port: 443
-      targetPort: 3000
-      name: nb-green-ops-grafana
-  selector:
-    app: nb-green-ops-grafana
----
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   labels:
+#     name: nb-green-ops-grafana
+#   name: nb-green-ops-grafana
+#   namespace: nb-green-ops
+# spec:
+#   type: ClusterIP
+#   ports:
+#     - port: 443
+#       targetPort: 3000
+#       name: nb-green-ops-grafana
+#   selector:
+#     app: green-ops-grafana
+# ---
 
 # prometheus
 apiVersion: v1
@@ -23,30 +23,31 @@ metadata:
   labels:
     name: nb-green-ops-prometheus
   name: nb-green-ops-prometheus
-  namespace: nb-green-ops
+  namespace: green-ops
 spec:
-  type: ClusterIP
+  type: NodePort
   ports:
     - port: 9090
       targetPort: 9090
+      nodePort: 31000
       name: nb-green-ops-prometheus
   selector:
     app: nb-green-ops-prometheus
 
 ---
 # app
-apiVersion: v1
-kind: Service
-metadata:
-  labels:
-    name: if-metrics-app
-  name: if-metrics-app
-  namespace: nb-green-ops
-spec:
-  type: ClusterIP
-  ports:
-    - port: 4040
-      targetPort: 4040
-      name: if-metrics-app
-  selector:
-    app: if-metrics-app
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   labels:
+#     name: if-metrics-app
+#   name: if-metrics-app
+#   namespace: green-ops
+# spec:
+#   type: ClusterIP
+#   ports:
+#     - port: 4040
+#       targetPort: 4040
+#       name: if-metrics-app
+#   selector:
+#     app: if-metrics-app
