@@ -22,7 +22,7 @@ kind: ClusterRole
 metadata:
   name: metrics-reader-role
 rules:
-- apiGroups: ["metrics.k8s.io"]
+- apiGroups: ["*"]
   resources: ["pods", "nodes"]
   verbs: ["get", "watch", "list"]
 

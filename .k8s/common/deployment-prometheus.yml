@@ -16,12 +16,12 @@ spec:
     spec:
       containers:
         - name: prometheus
-          image: 'nsnprodsacr001.azurecr.io/prom/prometheus:v2.50.1'
-          command: 
-          - "/bin/prometheus"
-          - "--config.file=/etc/prometheus/prometheus.yml"
-          - "--storage.tsdb.path=/prometheus"
-          - "--storage.tsdb.retention.time=30d"
+          image: 'prom/prometheus:latest'
+          # command: 
+          # - "/bin/prometheus"
+          # - "--config.file=/etc/prometheus/prometheus.yml"
+          # - "--storage.tsdb.path=/prometheus"
+          # - "--storage.tsdb.retention.time=30d"
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 9090
@@ -37,20 +37,33 @@ spec:
           volumeMounts:
           - mountPath: /prometheus
             name: data
-          - mountPath: /etc/prometheus/prometheus.yml
-            subPath: prometheus.yml
-            name: prometheus-yml
+          # - mountPath: /etc/prometheus/prometheus.yml
+          #   subPath: prometheus.yml
+          #   name: prometheus-yml
 
       volumes:
         - name: data
           emptyDir:
             sizeLimit: 16Gi
-        - name: prometheus-yml
-          configMap:
-            name: prometheus-yml
+        # - name: prometheus-yml
+        #   configMap:
+        #     name: prometheus-yml
 
-      tolerations:
-      - key: "kubernetes.azure.com/scalesetpriority"
-        operator: "Equal"
-        value: "spot"
-        effect: "NoSchedule"
+---
+
+# prometheus
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    name: carbon-hack-24-prometheus
+  name: carbon-hack-24-prometheus
+  namespace: carbon-hack-24
+spec:
+  type: NodePort
+  ports:
+    - port: 9090
+      targetPort: 9090
+      name: carbon-hack-24-prometheus
+  selector:
+    app: carbon-hack-24-prometheus

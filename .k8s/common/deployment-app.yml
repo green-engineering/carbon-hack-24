@@ -17,58 +17,13 @@ spec:
       containers:
         - name: carbon-hack-24-app
           env:
-            - name: DB_USERNAME
-              valueFrom:
-                secretKeyRef:
-                  name: pgsql-greenops
-                  key: user
-            - name: DB_NAME
-              valueFrom:
-                secretKeyRef:
-                  name: pgsql-greenops
-                  key: db-name
-            - name: DB_HOST
-              valueFrom:
-                secretKeyRef:
-                  name: pgsql-greenops
-                  key: db-host
-            - name: DB_PORT
-              valueFrom:
-                secretKeyRef:
-                  name: pgsql-greenops
-                  key: db-port
-            - name: DB_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: pgsql-greenops
-                  key: password
-            - name: JWT_SECRET
-              valueFrom:
-                secretKeyRef:
-                  name: app-admin
-                  key: jwt-secret
-            - name: ADMIN_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: app-admin
-                  key: password
-            - name: ADMIN_USER
-              valueFrom:
-                secretKeyRef:
-                  name: app-admin
-                  key: user
-
-            - name: no_proxy
-              value: '''
-            - name: https_proxy
-              value: 
-            - name: http_proxy
-              value: 
+            - name: NODE_TLS_REJECT_UNAUTHORIZED
+              value: "0"
               
-          image: 'nsnprodsacr001.azurecr.io/greenops/carbon-hack-24-app:dev'
-          imagePullPolicy: Always
+          image: 'ch24/prom-exporter-server:latest'
+          imagePullPolicy: IfNotPresent
           ports:
-            - containerPort: 4000
+            - containerPort: 4040
               name: http-app
               protocol: TCP
           resources:
@@ -79,16 +34,28 @@ spec:
              memory: "2Gi"
              cpu: "1"
           volumeMounts:
-          - mountPath: /app/uploads
+          - mountPath: /app/public
             name: data
 
       volumes:
         - name: data
           emptyDir:
-            sizeLimit: 2Gi
+            sizeLimit: 1Gi
 
-      tolerations:
-      - key: "kubernetes.azure.com/scalesetpriority"
-        operator: "Equal"
-        value: "spot"
-        effect: "NoSchedule"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    name: carbon-hack-24-app
+  name: carbon-hack-24-app
+  namespace: carbon-hack-24
+spec:
+  type: NodePort
+  ports:
+    - port: 4040
+      targetPort: 4040
+      nodePort: 31000
+      name: carbon-hack-24-app
+  selector:
+    app: carbon-hack-24-app

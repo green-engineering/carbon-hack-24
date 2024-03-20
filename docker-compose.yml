@@ -1,0 +1,13 @@
+services:
+
+  app:
+    image: "ch24/prom-exporter-server:latest"
+    container_name: ch24-app
+    restart: unless-stopped
+    ports:
+    - "4040:4040"
+    environment:
+        - EXAMPLE=varvalue
+    volumes:
+    - ${PWD}/server/public:/app/public
+

@@ -1,0 +1,100 @@
+name: k8s-metrics-importer-example
+description: k8s-metrics-importer-example
+tags:
+initialize:
+  plugins:
+    if-k8s-metrics-importer:
+      method: K8sMetricsImporter
+      path: "https://github.com/nb-green-ops/if-k8s-metrics-importer"
+      global-config:
+        # Replace with your cluster token 
+        token: eyJhbGciOiJSUzI1NiIsImtpZCI6IkJLSTF4aXNxbGZDZlBxUWJRVmQzN0dLbWFPSEE3ekFsMDAzMEVhWjhnZUUifQ.eyJhdWQiOlsiaHR0cHM6Ly9rdWJlcm5ldGVzLmRlZmF1bHQuc3ZjLmNsdXN0ZXIubG9jYWwiXSwiZXhwIjo1MzA5NTUyNjczLCJpYXQiOjE3MDk1NTYyNzMsImlzcyI6Imh0dHBzOi8va3ViZXJuZXRlcy5kZWZhdWx0LnN2Yy5jbHVzdGVyLmxvY2FsIiwia3ViZXJuZXRlcy5pbyI6eyJuYW1lc3BhY2UiOiJkZWZhdWx0Iiwic2VydmljZWFjY291bnQiOnsibmFtZSI6Im1ldHJpY3MtcmVhZGVyLXNhIiwidWlkIjoiMGIwMzYzODEtNzQ0Yi00ZGFjLTkzNTgtY2Y0NzU3OTcwNDYzIn19LCJuYmYiOjE3MDk1NTYyNzMsInN1YiI6InN5c3RlbTpzZXJ2aWNlYWNjb3VudDpkZWZhdWx0Om1ldHJpY3MtcmVhZGVyLXNhIn0.XR1-PdIxeaOHXkhhVWLux7fBnDu4zxe6yrVbdEUIfNwPushfpZDVVU7dznGnTKI-dJ18-96tomJ0i_EmN9KMHb_cd433QUUHKCw19vJSy6Hh7Q8LF0zeSzimfgKAYgdXRNJxL0zRCyZgqro-lRjbKXxic51OQ2LJtiy_s_TQEFnd80CnYlr2ImlauIbsLX7rbDeuqzlwLpAWqOOCNoo2t2bsPSrnpotTxeNX5j7goC5SXtmLB3oVGPuIgjjJXd-98_xp8an-ERbs96NGH3V5Y0-1-Sbe93tQH_qU1M8xim1WRL0W9x2cA2VH6Eo_-C3ngKzkLDaW-6r_Drk1v_ulPA
+        k8s-host-url: https://kubernetes.docker.internal:6443
+        # k8s-host-url: https://localhost:6443
+    if-prometheus-exporter:
+      method: PrometheusExporter
+      path: "https://github.com/nb-green-ops/if-prometheus-exporter"
+      global-config:
+        output-file: ./public/metrics.prom
+        output-metrics:
+        - "k8s/cpu/utilization"
+        - "cpu/utilization" 
+        - "k8s/memory/utilization"
+        - "memory/utilization"
+        - "cpu/energy"
+        - "memory/energy"
+        - "carbon-embodied"
+        - "energy"
+        - "carbon-operational"
+        - "carbon"
+        - "sci"
+        output-metric-labels:
+        - "k8s/node/name"
+        - "k8s/pod/name"
+        - "k8s/container/name"
+        - "k8s/namespace"
+        - "k8s/label/k8s-app"
+    e-mem:
+      method: EMem
+      path: "@grnsft/if-plugins"
+      global-config:
+        energy-per-gb: 0.000392 
+    e-net:
+      method: ENet
+      path: '@grnsft/if-plugins'
+      global-config:
+        energy-per-gb: 0.001
+    sci-e:
+      kind: plugin
+      method: SciE
+      path: "@grnsft/if-plugins"
+    sci-o:
+      verbose: false
+      method: SciO
+      path: "@grnsft/if-plugins"
+    sci-m: # a model that calculates m from te, tir, el, rr and rtor
+      method: SciM
+      verbose: false
+      path: "@grnsft/if-plugins"
+    sci:
+      kind: plugin
+      method: Sci
+      path: "@grnsft/if-plugins"
+      global-config:
+        functional-unit: ''
+        functional-unit-time: '1-second'
+
+    teads-curve:
+      method: TeadsCurve
+      path: "@grnsft/if-unofficial-plugins"
+      global-config:
+        interpolation: spline
+
+tree:
+  children:
+    cluster:
+      pipeline:
+      - if-k8s-metrics-importer
+      - teads-curve
+      - e-mem
+      - sci-m
+      - sci-e
+      - sci-o
+      - sci
+      - if-prometheus-exporter
+      defaults:
+        device/emissions-embodied: 1533.120 # gCO2eq
+        time-reserved: 15 # 1hr in seconds
+        device/expected-lifespan: 94608000 # 3 years in seconds
+        resources-reserved: 1
+        resources-total: 1
+        grid/carbon-intensity: 800
+        cpu/thermal-design-power: 30
+      config:
+        sci:
+          functional-unit-time: 1 sec
+          functional-unit: requests # factor to convert per time to per f.unit
+      inputs:
+
+          
+
