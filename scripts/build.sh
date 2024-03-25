@@ -26,4 +26,4 @@ npm i
 
 cd ${root}
 echo Docker Build
-docker build -t $NAME:$VERSION_TAG --progress=plain .
+docker build -t $NAME:$VERSION_TAG --progress=plain . --no-cache

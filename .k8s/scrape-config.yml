@@ -1,0 +1,13 @@
+apiVersion: monitoring.coreos.com/v1alpha1
+kind: ScrapeConfig
+metadata:
+  name: carbon-hack-24-app-scrape-config
+  namespace: carbon-hack-24
+  labels:
+    prometheus: system-monitoring-prometheus
+spec:
+  staticConfigs:
+    - labels:
+        job: carbon-hack-24-app
+      targets:
+        - carbon-hack-24-app.carbon-hack-24:4040
