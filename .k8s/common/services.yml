@@ -9,44 +9,8 @@ metadata:
 spec:
   type: ClusterIP
   ports:
-    - port: 443
+    - port: 4000
       targetPort: 4000
       name: green-ops-app
   selector:
     app: green-ops-app
-
----
-#grafana
-apiVersion: v1
-kind: Service
-metadata:
-  labels:
-    name: green-ops-grafana
-  name: green-ops-grafana
-  namespace: green-ops
-spec:
-  type: ClusterIP
-  ports:
-    - port: 443
-      targetPort: 3000
-      name: green-ops-grafana
-  selector:
-    app: green-ops-grafana
----
-
-# prometheus
-apiVersion: v1
-kind: Service
-metadata:
-  labels:
-    name: green-ops-prometheus
-  name: green-ops-prometheus
-  namespace: green-ops
-spec:
-  type: ClusterIP
-  ports:
-    - port: 9090
-      targetPort: 9090
-      name: green-ops-prometheus
-  selector:
-    app: green-ops-prometheus

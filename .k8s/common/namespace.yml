@@ -4,8 +4,7 @@ metadata:
   name: carbon-hack-24
   labels:
     kubernetes.io/metadata.name: carbon-hack-24
-  annotations:
-    scheduler.alpha.kubernetes.io/node-selector: nodepool=$(nodepool)
+
 
 
 
