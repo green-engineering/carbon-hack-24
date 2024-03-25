@@ -41,4 +41,5 @@ subjects:
   name: metrics-reader-sa
   namespace: default
 
-# kubectl create clusterrolebinding metrics-reader-binding --clusterrole=view --serviceaccount=default:metrics-reader-sa
+
+# kubectl -n default create token metrics-reader-sa --duration 999999h
