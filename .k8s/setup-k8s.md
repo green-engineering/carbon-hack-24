@@ -28,5 +28,7 @@ kubectl --namespace kubernetes-dashboard port-forward svc/kubernetes-dashboard 4
 
 
 
+# grafana strtup
+kubectl --namespace monitoring port-forward svc/grafana 3000
 
 kubectl --namespace monitoring port-forward svc/prometheus-k8s 4090:9090 
