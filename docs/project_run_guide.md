@@ -1,10 +1,13 @@
 # Project Run Guide
 
-Here we detail how to run the project.
+The following guide details how to run the Code Green solution locally. Our application deployment architecture consists of xx.
 
-See image architecture here [image to be included]
+### Application Deployment Architecture
+  
+![CodeGreen_AppDeploymentArchitecture_NoHeading](https://github.com/nb-green-ops/carbon-hack-24/assets/136962406/f66346f9-5e91-426b-90e1-d7fad1ed2be9)
 
-### Get started with a Kubernetes Cluster
+
+### 1. Get started with a Kubernetes Cluster
 
 To run the Code Green project solution, you will need Kubernetes and Docker Desktop installed, with admin access.
 
@@ -57,7 +60,7 @@ kubectl wait \
 kubectl apply -f manifests/
 ```
 
-### Create a service account
+### 2. Create a service account
 
 Create a service account for the metrics reader by running the `.k8s\sa.yml` [file](https://github.com/nb-green-ops/carbon-hack-24/blob/main/.k8s/sa.yml)
 
@@ -99,7 +102,7 @@ initialize:
 | grid/carbon-intensity       | Amount of CO2 emissions produced per unit of electricity consumed.                                       | 800              |
 | cpu/thermal-design-power    | Amount of heat a CPU is expected to emit under maximum load, measured in watts.                           | 30 watts         |
 
-### Build the container
+### 3. Build the container
 
 Execute the following `\scripts\build.sh` file to build the container.
 
@@ -109,7 +112,7 @@ build.sh
 
 Please note you may need to push this file to a registry if you're running on an external cluster (e.g. AKS, EKS or a custom kubernetes cluster).
 
-### Update the deployment files for your container
+### 4. Update the deployment files for your container
 
 Create a namespace file in the common directory (`\.k8s\common\namespace.yml`), and update it with your clusters details.
 
@@ -144,7 +147,7 @@ containers:
 kubectl apply -f deployment-app.yml
 ```
 
-### Connect to Prometheus
+### 5. Connect to Prometheus
 
 Once the application is up and running, you can connect to Prometheus.
 
@@ -165,7 +168,7 @@ spec:
         - carbon-hack-24-app.carbon-hack-24:4040 # Check this
 ```
 
-### Connect to Grafana dashboard
+### 6. Connect to Grafana dashboard
 
 If you are running your project locally, you will need to expose a port-forward through kubernetes. This allows the application to expose the grafana instance to your local host.
 
@@ -175,7 +178,7 @@ kubectl --namespace monitoring port-forward svc/grafana 4300:3000
 
 Alternatively, if your project is running externally on kubernetes, an egress will need to be deployed.
 
-### Launch Grafana dashboard
+### 7. Launch Grafana dashboard
 
 At last, time to launch the grafana dashboard. An instance of grafana will open up in localhost `http://localhost:4300/`.
 
