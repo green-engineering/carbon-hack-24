@@ -30,7 +30,7 @@ Clone this in a new and seperate directory, outside of CARBON-HACK-24.
 git clone https://github.com/prometheus-operator/kube-prometheus.git
 ```
 
-In the new Prometheus repo directory, run the following commands:
+In the new Prometheus repository directory, run the following commands:
 
 ```sh
 kubectl apply --server-side -f manifests/setup
@@ -40,14 +40,12 @@ kubectl wait \
 --namespace=monitoring
 kubectl apply -f manifests/
 ```
+For ease of use, we recommend the following steps.
+* Create the Namespace and Custom Resource Definition (CRDs), and then wait for them to be available before creating the remaining resources.
 
-* Create the namespace and CRDs, and then wait for them to be available before creating the remaining resources
+* Note that due to some CRD size we are using `kubectl server-side apply` feature which is generally available since kubernetes 1.22.
 
-
-* Note that due to some CRD size we are using kubectl server-side apply feature which is generally available since kubernetes 1.22.
-
-* If you are using previous kubernetes versions this feature may not be available and you would need to use kubectl create instead.
-
+* If you are using previous kubernetes versions this feature may not be available and you would need to use `kubectl create` instead.
 
 
 ### 2. Create a service account
@@ -117,7 +115,7 @@ metadata:
 
 Once the namespace has been created, run the `\.k8s\common\deployment-app.yml` file to deploy the new namespace.
 
-* Ensure that the namespace references match the newly created `\.k8s\common\namespace.yml` .yml file
+* Ensure that the namespace references match the newly created `\.k8s\common\namespace.yml` file
 
 * Replace the image name with your containers details. Make sure to prepend with the associated registry.
 
@@ -176,3 +174,6 @@ At last, time to launch the grafana dashboard. An instance of grafana will open 
 * Password: admin
 
 **[Optional] Use our template for your Grafana dashboard**: Make use of default json file for your emission dashboard. Located in the `k8s\docs\default-green-dash.json` file.
+
+### 8. Set up alerts
+
