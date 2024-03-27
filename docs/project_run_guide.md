@@ -22,19 +22,6 @@ kubectl apply -f <https://github.com/kubernetes-sigs/metrics-server/releases/lat
 
 Install the default Prometheus operator and Grafana stack. For more information see user guide [here](https://prometheus-operator.dev/docs/user-guides/getting-started/)
 
-```sh
-LATEST=$(curl -s https://api.github.com/repos/prometheus-operator/prometheus-operator/releases/latest | jq -cr .tag_name)
-
-curl -sL https://github.com/prometheus-operator/prometheus-operator/releases/download/${LATEST}/bundle.yaml | kubectl create -f -
-```
-
-Next, deploy the kubernetes dashboard.
-
-```sh
-kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.7.0/aio/deploy/recommended.yaml
-```
-
-[not sure were to put the below]
 We make use of [kube-prometheus](https://github.com/prometheus-operator/kube-prometheus.git), a tool that allows us to use Prometheus to monitor Kubernetes and applications running on Kubernetes.
 
 Clone this in a new and seperate directory, outside of CARBON-HACK-24.
@@ -43,13 +30,7 @@ Clone this in a new and seperate directory, outside of CARBON-HACK-24.
 git clone https://github.com/prometheus-operator/kube-prometheus.git
 ```
 
-In the new directory, run the following commands
-* Create the namespace and CRDs, and then wait for them to be available before creating the remaining resources
-
-
-* Note that due to some CRD size we are using kubectl server-side apply feature which is generally available since kubernetes 1.22.
-
-* If you are using previous kubernetes versions this feature may not be available and you would need to use kubectl create instead.
+In the new Prometheus repo directory, run the following commands:
 
 ```sh
 kubectl apply --server-side -f manifests/setup
@@ -59,6 +40,15 @@ kubectl wait \
 --namespace=monitoring
 kubectl apply -f manifests/
 ```
+
+* Create the namespace and CRDs, and then wait for them to be available before creating the remaining resources
+
+
+* Note that due to some CRD size we are using kubectl server-side apply feature which is generally available since kubernetes 1.22.
+
+* If you are using previous kubernetes versions this feature may not be available and you would need to use kubectl create instead.
+
+
 
 ### 2. Create a service account
 
@@ -104,10 +94,10 @@ initialize:
 
 ### 3. Build the container
 
-Execute the following `\scripts\build.sh` file to build the container.
+Execute the following `/scripts/build.sh` file to build the container. Ensure to run this in the root directory of the carbon hack repo.
 
 ```sh
-build.sh
+./scripts/build.sh
 ```
 
 Please note you may need to push this file to a registry if you're running on an external cluster (e.g. AKS, EKS or a custom kubernetes cluster).
