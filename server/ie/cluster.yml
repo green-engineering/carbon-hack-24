@@ -7,10 +7,11 @@ initialize:
       method: K8sMetricsImporter
       path: "https://github.com/nb-green-ops/if-k8s-metrics-importer"
       global-config:
-        # Replace with your cluster token 
-        token: WFPSEE3ekFsMDAzMEVhWjhnZUUifQ.eeyJhbGciOiJSUzI1NiIsImtpZCI6IkJLSTF4aXNxbGZDZlBxUWJRVmQzN0dLbyJhdWQiOlsiaHR0cHM6Ly9rdWJlcm5ldGVzLmRlZmF1bHQuc3ZjLmNsdXN0ZXIubG9jYWwiXSwiZXhwIjo1MzA5NTUyNjczLCJpYXQiOjE3MDk1NTYyNzMsImlzcyI6Imh0dHBzOi8va3ViZXJuZXRlcy5kZWZhdWx0LnN2Yy5jbHVzdGVyLmxvY2FsIiwia3ViZXJuZXRlcy5pbyI6eyJuYW1lc3BhY2UiOiJkZWZhdWx0Iiwic2VydmljZWFjY291bnQiOnsibmFtZSI6Im1ldHJpY3MtcmVhZGVyLXNhIiwidWlkIjoiMGIwMzYzODEtNzQ0Yi00ZGFjLTkzNTgtY2Y0NzU3OTcwNDYzIn19LCJuYmYiOjE3MDk1NTYyNzMsInN1YiI6InN5c3RlbTpzZXJ2aWNlYWNjb3VudDpkZWZhdWx0Om1ldHJpY3MtcmVhZGVyLXNhIn0.XR1-PdIxeaOHXkhhVWLux7fBnDu4zxe6yrVbdEUIfNwPushfpZDVVU7dznGnTKI-dJ18-96tomJ0i_EmN9KMHb_cd433QUUHKCw19vJSy6Hh7Q8LF0zeSzimfgKAYgdXRNJxL0zRCyZgqro-lRjbKXxic51OQ2LJtiy_s_TQEFnd80CnYlr2ImlauIbsLX7rbDeuqzlwLpAWqOOCNoo2t2bsPSrnpotTxeNX5j7goC5SXtmLB3oVGPuIgjjJXd-98_xp8an-ERbs96NGH3V5Y0-1-Sbe93tQH_qU1M8xim1WRL0W9x2cA2VH6Eo_-C3ngKzkLDaW-6r_Drk1v_ulPA
+        # Replace with your cluster token command:  kubectl -n default create token metrics-reader-sa --duration 999999h
+        token: eyJhbGciOiJSUzI1NiIsImtpZCI6InNvREJZOHRFYXhESDFLeTQycGc4akRVMXN5cFJaN2hLbHNyeVd1NXVyelEifQ.eyJhdWQiOlsiaHR0cHM6Ly9rdWJlcm5ldGVzLmRlZmF1bHQuc3ZjLmNsdXN0ZXIubG9jYWwiXSwiZXhwIjo1MzExMzY4MDc1LCJpYXQiOjE3MTEzNzE2NzUsImlzcyI6Imh0dHBzOi8va3ViZXJuZXRlcy5kZWZhdWx0LnN2Yy5jbHVzdGVyLmxvY2FsIiwia3ViZXJuZXRlcy5pbyI6eyJuYW1lc3BhY2UiOiJkZWZhdWx0Iiwic2VydmljZWFjY291bnQiOnsibmFtZSI6Im1ldHJpY3MtcmVhZGVyLXNhIiwidWlkIjoiZGNjOTBkNDYtZWRmMC00MDdkLWI5NjEtNmYzNWFmNjRmYzhiIn19LCJuYmYiOjE3MTEzNzE2NzUsInN1YiI6InN5c3RlbTpzZXJ2aWNlYWNjb3VudDpkZWZhdWx0Om1ldHJpY3MtcmVhZGVyLXNhIn0.H8fZ6QkHylxAAAzjajA6ydxJNpiMcFOXPRnWMTmfhu38gOpiUX48nLoh_uMdNDqVKPC-vrV4YlOLCQdKP1-aLbJGVtTOsUBfyQyVkmswrtyXfCv96uB3aG_DG4beoI8LrB4RjFklBS2k_9xtBIwyl5ekjanjsOyFlX_KIKS5YH_M7h9iS1EW1BTyWkqzsR_NRKQRfH7M04iAcy48K6ZmSWi1BMyp7OMuowPlDMmLqn7HhGeC7VYv7294gNPjjoZjXGDDr0-6GsAG9bfaxNvf48XxizWwBx7R2rnrP_Oo9JBe6w7Z3RsstYxfbhFJTHdk1GOPUf0ql4du-gBssmdGkQ
+        #Run on your local host or make use of kubernetes.docker internal instance
         k8s-host-url: https://kubernetes.docker.internal:6443
-        # k8s-host-url: https://localhost:6443
+        #k8s-host-url: https://localhost:6443
     if-prometheus-exporter:
       method: PrometheusExporter
       path: "https://github.com/nb-green-ops/if-prometheus-exporter"
@@ -34,6 +35,8 @@ initialize:
         - "k8s/container/name"
         - "k8s/namespace"
         - "k8s/label/k8s-app"
+        - "latitude"
+        - "longitude"
     e-mem:
       method: EMem
       path: "@grnsft/if-plugins"
@@ -90,11 +93,13 @@ tree:
         resources-total: 1
         grid/carbon-intensity: 800
         cpu/thermal-design-power: 30
+        latitude: -26.2023
+        longitude: 28.0436
       config:
         sci:
           functional-unit-time: 1 sec
           functional-unit: requests # factor to convert per time to per f.unit
       inputs:
-
+  # No inputs are captured as the values are extracted from the output.
           
 
