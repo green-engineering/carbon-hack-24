@@ -173,7 +173,19 @@ At last, time to launch the grafana dashboard. An instance of grafana will open 
 * Username: admin
 * Password: admin
 
+Please see below a few key charts in the Software Carbon Intensity (SCI) dashboard. Using the K8s metrics from your cluster, we provide a sum of the total SCI and map according to the cluster location.
+
+<img width="452" alt="image" src="https://github.com/nb-green-ops/carbon-hack-24/assets/136962406/0dd4c1f3-91c0-4bcb-b917-1b58506ee747">
+
+Average CPU and memory utilisation for the cluster.
+<img width="452" alt="image" src="https://github.com/nb-green-ops/carbon-hack-24/assets/136962406/9cd49eb4-deef-4795-9906-4005d9534bf8">
+
+Average CPU and memory utilisation as per namespace, pod and container.
+<img width="452" alt="image" src="https://github.com/nb-green-ops/carbon-hack-24/assets/136962406/83971998-d89e-4901-a903-94f571e6997e">
+
 **[Optional] Use our template for your Grafana dashboard**: Make use of default json file for your emission dashboard. Located in the `k8s\docs\default-green-dash.json` file.
 
 ### 8. Set up alerts
+We believe, a big step towards making tracked emissions usable, is an alert system. 
 
+<img width="452" alt="image" src="https://github.com/nb-green-ops/carbon-hack-24/assets/136962406/9a71bf10-cea7-46d8-9c0c-40bb453cf331">
