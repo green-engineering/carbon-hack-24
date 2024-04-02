@@ -50,7 +50,7 @@ For ease of use, we recommend the following steps.
 
 ### 2. Create a service account
 
-Create a service account for the metrics reader by running the `.k8s\sa.yml` [file](https://github.com/nb-green-ops/carbon-hack-24/blob/main/.k8s/sa.yml)
+Create a service account for the metrics reader by running `\.k8s\sa.yml`.
 
 ```sh
 kubectl apply -f sa.yml
@@ -62,7 +62,7 @@ Create a token for the service account, ensure its for an extended duration.
 kubectl -n default create token metrics-reader-sa --duration 999999h
 ```
 
-Replace the token and kubernetes (k8s) host url located in the `server\ie\cluster.yaml` [file](https://github.com/nb-green-ops/carbon-hack-24/blob/main/server/ie/cluster.yml) and replace with your own values specific to your kubernetes cluster. Note that the k8s host url will be different if your cluster is hosted on Azure or AWS.
+Replace the token and kubernetes (k8s) host url located in `server\ie\cluster.yml` and replace with your own values specific to your kubernetes cluster. Note that the k8s host url will be different if your cluster is hosted on Azure or AWS.
 
 ```yml
 name: k8s-metrics-importer-example
@@ -78,7 +78,7 @@ initialize:
         k8s-host-url: [REPLACE WITH YOUR OWN HOST URL]
 ```
 
-**[Optional] Modify default metrics**: For more accurate readings, you can replace the default metrics in the `server\ie\cluster.yaml` [file](https://github.com/nb-green-ops/carbon-hack-24/blob/main/server/ie/cluster.yml) by adding values applicable to your cluster.
+**[Optional] Modify default metrics**: For more accurate readings, you can replace the default metrics in `server\ie\cluster.yml` by adding values applicable to your cluster.
 
 | Metric                      | Description                                                                                               | Example          |
 |-----------------------------|-----------------------------------------------------------------------------------------------------------|------------------|
@@ -92,10 +92,10 @@ initialize:
 
 ### 3. Build the container
 
-Execute the following `/scripts/build.sh` file to build the container. Ensure to run this in the root directory of the carbon hack repo.
+Execute the following `\scripts\build.sh` file to build the container. Ensure to run this in the root directory of the carbon hack repo.
 
 ```sh
-./scripts/build.sh
+\scripts\build.sh
 ```
 
 Please note you may need to push this file to a registry if you're running on an external cluster (e.g. AKS, EKS or a custom kubernetes cluster).
@@ -129,7 +129,7 @@ containers:
           imagePullPolicy: IfNotPresent
 ```
 
-* Apply the `\.k8s\common\deployment-app.yaml` to startup the application. In the common directory, run the following
+* Apply the `\.k8s\common\deployment-app.yml` to startup the application. In the common directory, run the following
 
 ```sh
 kubectl apply -f deployment-app.yml
@@ -139,13 +139,13 @@ kubectl apply -f deployment-app.yml
 
 Once the application is up and running, you can connect to Prometheus.
 
-Apply the `.k8s\scrape-config.yml` file which will scrape the metrics for Prometheus.
+Apply the `\.k8s\scrape-config.yml` file which will scrape the metrics for Prometheus.
 
 ```sh
 kubectl apply -f scrape-config.yml
 ```
 
-If you made changes in the `\.k8s\common\deployment-app.yaml` file, check that the targets referenced in the `.k8s\scrape-config.yml` file are correct.
+If you made changes in the `\.k8s\common\deployment-app.yml` file, check that the targets referenced in the `.k8s\scrape-config.yml` file are correct.
 
 ```yml
 spec:
