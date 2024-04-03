@@ -8,18 +8,14 @@ We present a Kubernetes Impact Engine Metrics application that we believe will e
 
 ### Set up local environment
 
-Install the following repositories to set up your local environment.
+For a local deployment and evaluation the following is assumed about the environment:
 
-```sh
-npm install -g "@grnsft/if"
-npm install -g "@grnsft/if-plugins"
-npm install -g "@grnsft/if-unofficial-plugins"
-npm install -g "husky"
-npm install -g https://github.com/nb-green-ops/if-k8s-metrics-importer
-npm install -g https://github.com/nb-green-ops/if-prometheus-exporter
-```
+- It is based on Unix ( This is for the build script, running `docker build .` on Windows should work as well. See step 3)
+- It has docker installed, and contains a local k8s cluster.
+- the kubectl comaandline utility is installed.
 
-Once complete, set up all components as illustrated in the application deployment architecture.
+It is also possible to deploy to a hosted k8s service, but that requires also having access to a container registry.
+
 
 ### 1. Get started with a Kubernetes Cluster
 
@@ -44,7 +40,7 @@ Clone this in a new and seperate directory, outside of CARBON-HACK-24.
 git clone https://github.com/prometheus-operator/kube-prometheus.git
 ```
 
-In the new Prometheus repository directory, run the following commands:
+In the new `kube-prometheus` repositorie's root directory, run the following commands:
 
 ```sh
 kubectl apply --server-side -f manifests/setup
@@ -64,10 +60,10 @@ For ease of use, we recommend the following steps.
 
 ### 2. Create a service account
 
-Create a service account for the metrics reader by running `\.k8s\sa.yml`.
+Create a service account for the metrics reader by running `kubectl apply -f .k8s/sa.yml` from the root of the repository.
 
 ```sh
-kubectl apply -f sa.yml
+kubectl apply -f .k8s/sa.yml
 ```
 
 Create a token for the service account, ensure its for an extended duration.
@@ -76,7 +72,7 @@ Create a token for the service account, ensure its for an extended duration.
 kubectl -n default create token metrics-reader-sa --duration 999999h
 ```
 
-Replace the token and kubernetes (k8s) host url located in `server\ie\cluster.yml` and replace with your own values specific to your kubernetes cluster. Note that the k8s host url will be different if your cluster is hosted on Azure or AWS.
+Replace the token and kubernetes (k8s) host url located in `server/ie/cluster.yml` and replace with your own values specific to your kubernetes cluster. Note that the k8s host url will be different if your cluster is hosted on Azure or AWS.
 
 ```yml
 name: k8s-metrics-importer-example
@@ -106,60 +102,65 @@ initialize:
 
 ### 3. Build the container
 
-Execute the following `\scripts\build.sh` file to build the container. Ensure to run this in the root directory of the carbon hack repo.
+Execute the following `./scripts/build.sh` file to build the container. Ensure to run this in the root directory of the carbon hack repo.
 
 ```sh
-\scripts\build.sh
+./scripts/build.sh
 ```
 
 Please note you may need to push this file to a registry if you're running on an external cluster (e.g. AKS, EKS or a custom kubernetes cluster).
 
 ### 4. Update the deployment files for your container
 
-Create a namespace file in the common directory (`\.k8s\common\namespace.yml`), and update it with your clusters details.
+Create a namespace on the cluster using the provided yaml file `.k8s/common/namespace.yml`. Update it if you feel the need but be sure to also update all deployments of the app as well. 
 
 ```yml
 kind: Namespace 
 apiVersion: v1
 metadata:
-  name: carbon-hack-24 # update this
+  name: carbon-hack-24 # maybe update this
   labels:
-    kubernetes.io/metadata.name: carbon-hack-24 # update this
+    kubernetes.io/metadata.name: carbon-hack-24 # maybe update this
 ```
 
-Once the namespace has been created, run the `\.k8s\common\deployment-app.yml` file to deploy the new namespace.
+Create the namespace:
+```sh
+kubectl apply -f .k8s/common/namespace.yml
+```
 
-* Ensure that the namespace references match the newly created `\.k8s\common\namespace.yml` file
+Once the namespace has been created, apply the `.k8s/common/deployment-app.yml` file to deploy the app.
 
-* Replace the image name with your containers details. Make sure to prepend with the associated registry.
+Create the namespace:
+```sh
+kubectl apply -f .k8s/common/deployment-app.yml
+```
+
+* Ensure that the namespace references match the namespace created with the `.k8s/common/namespace.yml` file.
+
+* Replace the image name with your containers details if you changed the build script prior to this step.
+* Make sure to prepend with the associated registry if you are deploying to a hosted k8s cluster that is pulling from a registry.
 
 ```yml
 containers:
         - name: carbon-hack-24-app
           env:
-            - name: NODE_TLS_REJECT_UNAUTHORIZED
-              value: "0"
+            - name: NODE_TLS_REJECT_UNAUTHORIZED # This value is here to ignore certificates, in the case where you are using test clusters and certs
+              value: "0"                         # It is highly reccomended to not set this in any production case and import the propper root certs to your container
           image: 'ch24/prom-exporter-server:latest' # update this
           imagePullPolicy: IfNotPresent
 ```
 
-* Apply the `\.k8s\common\deployment-app.yml` to startup the application. In the common directory, run the following
-
-```sh
-kubectl apply -f deployment-app.yml
-```
-
 ### 5. Connect to Prometheus
 
-Once the application is up and running, you can connect to Prometheus.
+Once the application is up and running, we can apply a scrape config to let Prometheus know to scrape our app.
 
-Apply the `\.k8s\scrape-config.yml` file which will scrape the metrics for Prometheus.
+Apply the `.k8s/scrape-config.yml` file which will scrape the metrics for Prometheus.
 
 ```sh
 kubectl apply -f scrape-config.yml
 ```
 
-If you made changes in the `\.k8s\common\deployment-app.yml` file, check that the targets referenced in the `.k8s\scrape-config.yml` file are correct.
+If you made changes in the `.k8s/common/deployment-app.yml` file, check that the targets referenced in the `.k8s/scrape-config.yml` file are correct.
 
 ```yml
 spec:
@@ -172,24 +173,25 @@ spec:
 
 ### 6. Connect to Grafana dashboard
 
-If you are running your project locally, you will need to expose a port-forward through kubernetes. This allows the application to expose the grafana instance to your local host.
+If you are running your project locally, you will need to port-forward Grafana in order to access it. This allows the kubernetes to expose the grafana instance to your local host.
 
 ```sh
 kubectl --namespace monitoring port-forward svc/grafana 4300:3000
 ```
 
-Alternatively, if your project is running externally on kubernetes, an egress will need to be deployed.
+Alternatively, if your project is running externally on kubernetes, an ingress will need to be deployed and configured apropriately.
 
 ### 7. Launch Grafana dashboard
 
-At last, time to launch the grafana dashboard. An instance of grafana will open up in localhost `http://localhost:4300/`.
+At last, time to launch the grafana dashboard. Remembering the port we exposed Grafana on, we can open the following url in a browser: [`http://localhost:4300/`](http://localhost:4300/).
 
+The default admin credentials for Grafana:
 * Username: admin
 * Password: admin
 
 ## [Optional] Use our template for your Grafana dashboard
 
-Make use of our default json file for your emission dashboard, located in the `k8s\docs\default-green-dash.json` file. 
+Make use of our default json file for your emission dashboard, located in the `k8s/docs/default-green-dash.json` file. 
 
 Using K8s metrics from the cluster, we provide a sum of the total SCI and map according to the cluster location.
 
