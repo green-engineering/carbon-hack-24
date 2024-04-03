@@ -66,7 +66,9 @@ Create a token for the service account, ensure its for an extended duration.
 kubectl -n default create token metrics-reader-sa --duration 999999h
 ```
 
-Replace the token and kubernetes (k8s) host url located in `server/ie/cluster.yml` and replace with your own values specific to your kubernetes cluster. Note that the k8s host url will be different if your cluster is hosted on Azure or AWS.
+Replace the token and kubernetes (k8s) host url located in `server/ie/cluster.yml` and replace with your own values specific to your kubernetes cluster. 
+Note that the k8s host url will be different if your cluster is hosted on Azure or AWS.
+However for local KIND clusters the value should be `https://kubernetes.docker.internal:6443`.
 
 ```yml
 name: k8s-metrics-importer-example
@@ -82,7 +84,7 @@ initialize:
         k8s-host-url: [REPLACE WITH YOUR OWN HOST URL]
 ```
 
-**[Optional] Modify default metrics**: For more accurate readings, you can replace the default metrics in `server\ie\cluster.yml` by adding values applicable to your cluster.
+**[Optional] Modify default metrics**: For more accurate readings, you can replace the default metrics in `server/ie/cluster.yml` by adding values applicable to your cluster.
 
 | Metric                      | Description                                                                                               | Example          |
 |-----------------------------|-----------------------------------------------------------------------------------------------------------|------------------|
@@ -96,7 +98,7 @@ initialize:
 
 ### 3. Build the container
 
-Execute the following `./scripts/build.sh` file to build the container. Ensure to run this in the root directory of the carbon hack repo.
+Execute the following `./scripts/build.sh` file to build the container. Ensure to run this in the root directory of the carbon-hack-24 repo.
 
 ```sh
 ./scripts/build.sh
