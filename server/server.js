@@ -4,10 +4,6 @@ const PORT = process.env.PORT || '4040';
 const fs = require('node:fs');
 const execSync = require('child_process').execSync;
 
-app.get('/', (req, res) => {
-    res.send('This app has nothing interesting to show except on the /metrics endpoint. That is the one you want. /metrics')
-})
-
 app.get('/metrics', (req, res) => {
 
     const output = execSync('ie --manifest ./ie/cluster.yml', { encoding: 'utf-8' });  
@@ -17,10 +13,6 @@ app.get('/metrics', (req, res) => {
     res.send(data)
 })
 
-// app.get('/metrics-json', (req, res) => {
-//     res.send('Hello World! /metrics-json')
-// })
-
 app.listen(PORT, () => {
-    console.log(`Example app listening on port ${PORT}`)
+    console.log(`carbon-hack-24 listening on: ${PORT}`)
 })
