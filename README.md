@@ -1,11 +1,25 @@
-# Carbon Hack 24: Code Green Guide
+# Carbon Hack 24: Code Green
 
-The following guide details how to run the Code Green solution locally. Our application deployment architecture consists of xx.
+The following guide details how to run the Code Green solution. 
 
-### Application Deployment Architecture
-  
+We present a Kubernetes Impact Engine Metrics application that we believe will expand the uses of the Impact Framework to real-time metric access. Our application deployment architecture consists of Kubernetes(K8s), Prometheus and Grafana applications which communicate through our custom K8s Impact Engine Metrics Application.
+
 ![CodeGreen_AppDeploymentArchitecture_NoHeading](https://github.com/nb-green-ops/carbon-hack-24/assets/136962406/f66346f9-5e91-426b-90e1-d7fad1ed2be9)
 
+### Set up local environment
+
+Install the following repositories to set up your local environment.
+
+```sh
+npm install -g "@grnsft/if"
+npm install -g "@grnsft/if-plugins"
+npm install -g "@grnsft/if-unofficial-plugins"
+npm install -g "husky"
+npm install -g https://github.com/nb-green-ops/if-k8s-metrics-importer
+npm install -g https://github.com/nb-green-ops/if-prometheus-exporter
+```
+
+Once complete, set up all components as illustrated in the application deployment architecture.
 
 ### 1. Get started with a Kubernetes Cluster
 
