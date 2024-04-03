@@ -187,7 +187,11 @@ At last, time to launch the grafana dashboard. An instance of grafana will open 
 * Username: admin
 * Password: admin
 
-Please see below a few key charts in the Software Carbon Intensity (SCI) dashboard. Using the K8s metrics from your cluster, we provide a sum of the total SCI and map according to the cluster location.
+## [Optional] Use our template for your Grafana dashboard
+
+Make use of our default json file for your emission dashboard, located in the `k8s\docs\default-green-dash.json` file. 
+
+Using K8s metrics from the cluster, we provide a sum of the total SCI and map according to the cluster location.
 
 <img width="452" alt="image" src="https://github.com/nb-green-ops/carbon-hack-24/assets/136962406/0dd4c1f3-91c0-4bcb-b917-1b58506ee747">
 
@@ -199,9 +203,23 @@ Average CPU and memory utilisation as per namespace, pod and container.
 
 <img width="452" alt="image" src="https://github.com/nb-green-ops/carbon-hack-24/assets/136962406/83971998-d89e-4901-a903-94f571e6997e">
 
-**[Optional] Use our template for your Grafana dashboard**: Make use of default json file for your emission dashboard. Located in the `k8s\docs\default-green-dash.json` file.
 
 ### 8. Set up alerts
-We believe, a big step towards making tracked emissions usable, is an alert system. 
 
-<img width="452" alt="image" src="https://github.com/nb-green-ops/carbon-hack-24/assets/136962406/9a71bf10-cea7-46d8-9c0c-40bb453cf331">
+To modify the alert system, select the chart of interest. We have created a default alert for illustration, see the red box below.
+
+![image](https://github.com/nb-green-ops/carbon-hack-24/assets/136962406/9124535f-dce8-4aef-baf1-81b035860806)
+
+Select the alert and modify the alert name, query and alert condition. 
+
+![image](https://github.com/nb-green-ops/carbon-hack-24/assets/136962406/1b8e422e-04a5-4180-9e4f-28d73a86e924)
+
+Set threshold for alert to be triggered (currently set to trigger alert above 700).
+
+![image](https://github.com/nb-green-ops/carbon-hack-24/assets/136962406/63ba5b09-696b-4976-9bbf-76bfde3f3d76)
+
+Note that for now, this is all we need. Lave other alert rule values as default.
+
+Save and run the query. 
+
+### Project set up is now complete
