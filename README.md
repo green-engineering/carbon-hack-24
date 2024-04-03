@@ -27,7 +27,7 @@ To run the Code Green project solution, you will need Kubernetes and Docker Desk
 Once these are running in the background, install the metrics server.  
 
 ```sh
-kubectl apply -f <https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml>
+kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
 ```
 
 Install the default Prometheus operator and Grafana stack. For more information see user guide [here](https://prometheus-operator.dev/docs/user-guides/getting-started/)
