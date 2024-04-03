@@ -50,13 +50,7 @@ kubectl wait \
 --namespace=monitoring
 kubectl apply -f manifests/
 ```
-For ease of use, we recommend the following steps.
-* Create the Namespace and Custom Resource Definition (CRDs), and then wait for them to be available before creating the remaining resources.
-
-* Note that due to some CRD size we are using `kubectl server-side apply` feature which is generally available since kubernetes 1.22.
-
-* If you are using previous kubernetes versions this feature may not be available and you would need to use `kubectl create` instead.
-
+This will create all the nececary CRD's and resources for the kube-prometheus stack and may take a few seccond to somplete.
 
 ### 2. Create a service account
 
