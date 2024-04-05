@@ -24,7 +24,7 @@ Install the default Prometheus operator and Grafana stack. For more information 
 
 We make use of [kube-prometheus](https://github.com/prometheus-operator/kube-prometheus.git), a tool that allows us to use Prometheus to monitor Kubernetes and applications running on Kubernetes.
 
-Clone this in a new and seperate directory, outside of CARBON-HACK-24.
+Clone this in a new and separate directory, outside of CARBON-HACK-24.
 
 ```sh
 git clone https://github.com/prometheus-operator/kube-prometheus.git
