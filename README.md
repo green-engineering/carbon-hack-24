@@ -12,7 +12,7 @@ For a local deployment and evaluation the following is assumed about the environ
 
 - It is based on Unix ( This is for the build script, running `docker build .` on Windows should work as well. See step 3)
 - It has docker installed, and contains a local k8s cluster.
-- the kubectl comaandline utility is installed.
+- the kubectl comandline utility is installed.
 
 It is also possible to deploy to a hosted k8s service, but that requires also having access to a container registry.
 
@@ -34,13 +34,13 @@ Install the default Prometheus operator and Grafana stack. For more information 
 
 We make use of [kube-prometheus](https://github.com/prometheus-operator/kube-prometheus.git), a tool that allows us to use Prometheus to monitor Kubernetes and applications running on Kubernetes.
 
-Clone this in a new and seperate directory, outside of CARBON-HACK-24.
+Clone this in a new and separate directory, outside of CARBON-HACK-24.
 
 ```sh
 git clone https://github.com/prometheus-operator/kube-prometheus.git
 ```
 
-In the new `kube-prometheus` repositorie's root directory, run the following commands:
+In the new `kube-prometheus` repositories' root directory, run the following commands:
 
 ```sh
 kubectl apply --server-side -f manifests/setup
@@ -50,7 +50,7 @@ kubectl wait \
 --namespace=monitoring
 kubectl apply -f manifests/
 ```
-This will create all the nececary CRD's and resources for the kube-prometheus stack and may take a few seccond to somplete.
+This will create all the necessary CRD's and resources for the kube-prometheus stack and may take a few seconds to complete.
 
 ### 2. Create a service account
 
@@ -141,7 +141,7 @@ containers:
         - name: carbon-hack-24-app
           env:
             - name: NODE_TLS_REJECT_UNAUTHORIZED # This value is here to ignore certificates, in the case where you are using test clusters and certs
-              value: "0"                         # It is highly reccomended to not set this in any production case and import the propper root certs to your container
+              value: "0"                         # It is highly recommended to not set this in any production case and import the proper root certs to your container
           image: 'ch24/prom-exporter-server:latest' # update this
           imagePullPolicy: IfNotPresent
 ```
@@ -175,7 +175,7 @@ If you are running your project locally, you will need to port-forward Grafana i
 kubectl --namespace monitoring port-forward svc/grafana 4300:3000
 ```
 
-Alternatively, if your project is running externally on kubernetes, an ingress will need to be deployed and configured apropriately.
+Alternatively, if your project is running externally on kubernetes, an ingress will need to be deployed and configured appropriately.
 
 ### 7. Launch Grafana dashboard
 
