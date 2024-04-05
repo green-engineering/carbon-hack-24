@@ -1,6 +1,8 @@
 # Project Run Guide
 
-The following guide details how to run the Code Green solution locally. Our application deployment architecture consists of xx.
+The following guide details how to run the Code Green solution locally. 
+Our application deployment architecture consists of a local Kubernetes cluster running inside of Docker 
+(Any k8s cluster will do, but we chose the Docker Desktop KIND clister for ease of setup).
 
 ### Application Deployment Architecture
   
