@@ -216,7 +216,7 @@ Set threshold for alert to be triggered (currently set to trigger alert above 70
 
 ![image](https://github.com/nb-green-ops/carbon-hack-24/assets/136962406/63ba5b09-696b-4976-9bbf-76bfde3f3d76)
 
-Note that for now, this is all we need. Lave other alert rule values as default.
+Note that for now, this is all we need. Leave other alert rule values as default.
 
 Save and run the query. 
 
